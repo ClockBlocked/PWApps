@@ -1134,6 +1134,44 @@ const LoadingController = {
   }
 };
 
+// Skeleton Loader Utility
+const SkeletonLoader = {
+  getSkeletonHTML() {
+    return `
+      <div class="tutorial-content skeleton-content">
+        <div class="tutorial-header skeleton-header">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-subtitle"></div>
+          <div class="skeleton-meta">
+            <div class="skeleton skeleton-meta-item"></div>
+            <div class="skeleton skeleton-meta-item"></div>
+          </div>
+        </div>
+        
+        <div class="skeleton-section">
+          <div class="skeleton skeleton-section-title"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+        </div>
+        
+        <div class="skeleton-section">
+          <div class="skeleton skeleton-section-title"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+          <div class="skeleton skeleton-code"></div>
+        </div>
+        
+        <div class="skeleton-section">
+          <div class="skeleton skeleton-section-title"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+        </div>
+      </div>
+    `;
+  }
+};
+
 // Navigation Controller
 const NavigationController = {
   init() {
@@ -1236,6 +1274,14 @@ const NavigationController = {
 
     // Wait for fade out animation
     await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // Show skeleton loader
+    DOM.dynamicContent.innerHTML = SkeletonLoader.getSkeletonHTML();
+    DOM.dynamicContent.classList.remove("content-fade-out");
+    DOM.dynamicContent.classList.add("content-fade-in");
+
+    // Simulate minimum loading time for skeleton (optional)
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Get content data
     const contentData = ContentData[page];
@@ -1363,12 +1409,160 @@ const originalLoadContent = NavigationController.loadContent;
 NavigationController.loadContent = async function (...args) {
   await originalLoadContent.apply(this, args);
   setTimeout(observeElements, 100);
+  initializeCodeBlocks();
 };
+
+// Code Block Utilities
+const CodeBlockUtils = {
+  // Add copy buttons to all code blocks
+  addCopyButtons() {
+    document.querySelectorAll('.code-block').forEach((codeBlock) => {
+      // Check if copy button already exists
+      if (codeBlock.querySelector('.copy-button')) return;
+
+      const button = document.createElement('button');
+      button.className = 'copy-button';
+      button.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        <span>Copy</span>
+      `;
+      
+      button.addEventListener('click', () => {
+        const code = codeBlock.querySelector('pre').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          button.classList.add('copied');
+          button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Copied!</span>
+          `;
+          
+          setTimeout(() => {
+            button.classList.remove('copied');
+            button.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Copy</span>
+            `;
+          }, 2000);
+        });
+      });
+      
+      codeBlock.appendChild(button);
+    });
+  },
+
+  // Apply basic syntax highlighting
+  applySyntaxHighlighting() {
+    document.querySelectorAll('.code-block pre').forEach((pre) => {
+      const codeBlock = pre.closest('.code-block');
+      const language = codeBlock.getAttribute('data-language');
+      let code = pre.textContent;
+
+      // Don't re-highlight if already highlighted
+      if (pre.querySelector('.token')) return;
+
+      // Apply basic syntax highlighting based on language
+      if (language === 'javascript' || language === 'js') {
+        code = this.highlightJavaScript(code);
+      } else if (language === 'json') {
+        code = this.highlightJSON(code);
+      } else if (language === 'html') {
+        code = this.highlightHTML(code);
+      } else if (language === 'css') {
+        code = this.highlightCSS(code);
+      }
+
+      pre.innerHTML = code;
+    });
+  },
+
+  highlightJavaScript(code) {
+    // Keywords
+    code = code.replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|import|export|from|default|new|this|typeof|instanceof)\b/g, '<span class="token keyword">$1</span>');
+    
+    // Strings
+    code = code.replace(/(['"`])((?:\\.|(?!\1).)*?)\1/g, '<span class="token string">$1$2$1</span>');
+    
+    // Numbers
+    code = code.replace(/\b(\d+)\b/g, '<span class="token number">$1</span>');
+    
+    // Comments
+    code = code.replace(/(\/\/.*?)(\n|$)/g, '<span class="token comment">$1</span>$2');
+    code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="token comment">$1</span>');
+    
+    // Functions
+    code = code.replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g, '<span class="token function">$1</span>(');
+    
+    return code;
+  },
+
+  highlightJSON(code) {
+    // Property names
+    code = code.replace(/"([^"]+)":/g, '<span class="token property">"$1"</span>:');
+    
+    // String values
+    code = code.replace(/:\s*"([^"]*)"/g, ': <span class="token string">"$1"</span>');
+    
+    // Numbers
+    code = code.replace(/:\s*(\d+)/g, ': <span class="token number">$1</span>');
+    
+    // Booleans
+    code = code.replace(/:\s*(true|false)/g, ': <span class="token boolean">$1</span>');
+    
+    // Null
+    code = code.replace(/:\s*(null)/g, ': <span class="token keyword">$1</span>');
+    
+    return code;
+  },
+
+  highlightHTML(code) {
+    // Escape HTML for display
+    code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    
+    // Tag names
+    code = code.replace(/(&lt;\/?)([\w-]+)/g, '$1<span class="token tag">$2</span>');
+    
+    // Attribute names
+    code = code.replace(/\s+([\w-]+)=/g, ' <span class="token attr-name">$1</span>=');
+    
+    // Attribute values
+    code = code.replace(/="([^"]*)"/g, '=<span class="token string">"$1"</span>');
+    
+    return code;
+  },
+
+  highlightCSS(code) {
+    // Selectors
+    code = code.replace(/^([.#]?[\w-]+)(\s*{)/gm, '<span class="token selector">$1</span>$2');
+    
+    // Properties
+    code = code.replace(/\s+([\w-]+):/g, ' <span class="token property">$1</span>:');
+    
+    // Values
+    code = code.replace(/:\s*([^;]+);/g, ': <span class="token string">$1</span>;');
+    
+    // Comments
+    code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="token comment">$1</span>');
+    
+    return code;
+  }
+};
+
+// Initialize code blocks
+function initializeCodeBlocks() {
+  CodeBlockUtils.addCopyButtons();
+  CodeBlockUtils.applySyntaxHighlighting();
+}
 
 // Mobile Navigation Controller
 const MobileNavController = {
   init() {
-    this.mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+    this.mobileMenuToggle = document.getElementById("mobile-menu-button");
     this.mobileNav = document.getElementById("mobile-nav");
     this.mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
     this.isOpen = false;
