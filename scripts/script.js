@@ -1464,7 +1464,12 @@ const CodeBlockUtils = {
       let code = pre.textContent;
 
       // Don't re-highlight if already highlighted
-      if (pre.querySelector('.token')) return;
+      if (pre.hasAttribute('data-highlighted')) return;
+
+      // Escape HTML for all languages first (except HTML which needs special handling)
+      if (language !== 'html') {
+        code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
 
       // Apply basic syntax highlighting based on language
       if (language === 'javascript' || language === 'js') {
@@ -1478,6 +1483,7 @@ const CodeBlockUtils = {
       }
 
       pre.innerHTML = code;
+      pre.setAttribute('data-highlighted', 'true');
     });
   },
 
@@ -1502,20 +1508,20 @@ const CodeBlockUtils = {
   },
 
   highlightJSON(code) {
-    // Property names
+    // Property names (already escaped)
     code = code.replace(/"([^"]+)":/g, '<span class="token property">"$1"</span>:');
     
-    // String values
+    // String values - avoid re-highlighting already processed properties
     code = code.replace(/:\s*"([^"]*)"/g, ': <span class="token string">"$1"</span>');
     
     // Numbers
     code = code.replace(/:\s*(\d+)/g, ': <span class="token number">$1</span>');
     
-    // Booleans
-    code = code.replace(/:\s*(true|false)/g, ': <span class="token boolean">$1</span>');
+    // Booleans  
+    code = code.replace(/:\s*(true|false)\b/g, ': <span class="token boolean">$1</span>');
     
     // Null
-    code = code.replace(/:\s*(null)/g, ': <span class="token keyword">$1</span>');
+    code = code.replace(/:\s*(null)\b/g, ': <span class="token keyword">$1</span>');
     
     return code;
   },
