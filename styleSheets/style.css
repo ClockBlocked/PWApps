@@ -53,8 +53,8 @@ html {
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--gray-50);
-    color: var(--gray-800);
-    line-height: 1.25;
+    color: #1a1a1a;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -66,7 +66,7 @@ body {
     left: 0;
     width: 100%;
     height: 3px;
-    background: var(--gray-200);
+    background: transparent;
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
@@ -80,10 +80,11 @@ body {
 
 .loading-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-500), var(--primary-400), var(--primary-600));
+    background: linear-gradient(90deg, #ef4444, #dc2626, #b91c1c);
     width: 0%;
     transition: width var(--transition-normal);
     position: relative;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8), 0 0 20px rgba(239, 68, 68, 0.5);
 }
 
 .loading-bar::after {
@@ -93,7 +94,7 @@ body {
     right: 0;
     bottom: 0;
     width: 100px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
     animation: loading-shimmer 1.5s infinite;
 }
 
@@ -118,12 +119,13 @@ body {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--gray-200);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     transition: all var(--transition-normal);
 }
 
 .header.scrolled {
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.98);
 }
 
@@ -369,17 +371,19 @@ body {
 
 .hero-title {
     font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 700;
-    color: var(--gray-900);
+    font-weight: 800;
+    color: #0a0a0a;
     margin-bottom: 1.5rem;
     line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .hero-description {
     font-size: 1.25rem;
-    color: var(--gray-600);
+    color: #4a4a4a;
     margin-bottom: 2.5rem;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-weight: 400;
 }
 
 .hero-buttons {
@@ -490,16 +494,18 @@ body {
 
 .features-title {
     font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--gray-900);
+    font-weight: 800;
+    color: #0a0a0a;
     margin-bottom: 1rem;
+    letter-spacing: -0.02em;
 }
 
 .features-description {
     font-size: 1.25rem;
-    color: var(--gray-600);
+    color: #5a5a5a;
     max-width: 42rem;
     margin: 0 auto;
+    line-height: 1.6;
 }
 
 .features-grid {
@@ -562,14 +568,15 @@ body {
 
 .feature-title {
     font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--gray-900);
+    font-weight: 700;
+    color: #1a1a1a;
     margin-bottom: 0.75rem;
 }
 
 .feature-description {
-    color: var(--gray-600);
-    line-height: 1.6;
+    color: #5a5a5a;
+    line-height: 1.7;
+    font-size: 1rem;
 }
 
 /* Footer */
@@ -663,15 +670,17 @@ body {
 
 .tutorial-title {
     font-size: 3rem;
-    font-weight: 700;
-    color: var(--gray-900);
+    font-weight: 800;
+    color: #0a0a0a;
     margin-bottom: 1rem;
+    letter-spacing: -0.02em;
 }
 
 .tutorial-subtitle {
     font-size: 1.25rem;
-    color: var(--gray-600);
+    color: #4a4a4a;
     margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
 .tutorial-meta {
@@ -699,28 +708,31 @@ body {
 
 .section-title {
     font-size: 1.875rem;
-    font-weight: 600;
-    color: var(--gray-900);
+    font-weight: 700;
+    color: #1a1a1a;
     margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
 }
 
 .section-content p {
-    color: var(--gray-700);
-    line-height: 1.7;
+    color: #3a3a3a;
+    line-height: 1.8;
     margin-bottom: 1.5rem;
+    font-size: 1.0625rem;
 }
 
 .section-content h3 {
     font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--gray-900);
+    font-weight: 700;
+    color: #1a1a1a;
     margin: 2rem 0 1rem;
+    letter-spacing: -0.01em;
 }
 
 .section-content h4 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--gray-900);
+    color: #2a2a2a;
     margin: 1.5rem 0 0.75rem;
 }
 
@@ -730,37 +742,131 @@ body {
 }
 
 .section-content li {
-    color: var(--gray-700);
+    color: #3a3a3a;
     margin-bottom: 0.5rem;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .code-block {
-    background: var(--gray-900);
-    color: var(--gray-100);
+    background: #1a1a1a;
+    color: #e0e0e0;
     padding: 1.5rem;
     border-radius: 0.75rem;
     margin: 1.5rem 0;
     overflow-x: auto;
     position: relative;
+    border: 1px solid #333;
 }
 
 .code-block::before {
     content: attr(data-language);
     position: absolute;
     top: 0.75rem;
-    right: 1rem;
-    color: var(--gray-400);
+    right: 4rem;
+    color: #888;
     font-size: 0.75rem;
     text-transform: uppercase;
     font-weight: 500;
+    letter-spacing: 0.05em;
 }
 
 .code-block pre {
     margin: 0;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 0.875rem;
-    line-height: 1.5;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.code-block .copy-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #e0e0e0;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.code-block .copy-button:hover {
+    background: #333;
+    border-color: #555;
+}
+
+.code-block .copy-button.copied {
+    background: #10b981;
+    border-color: #059669;
+    color: white;
+}
+
+.code-block .copy-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Syntax Highlighting */
+.code-block .token.comment,
+.code-block .token.prolog,
+.code-block .token.doctype,
+.code-block .token.cdata {
+    color: #7c7c7c;
+    font-style: italic;
+}
+
+.code-block .token.punctuation {
+    color: #c5c8c6;
+}
+
+.code-block .token.property,
+.code-block .token.tag,
+.code-block .token.boolean,
+.code-block .token.number,
+.code-block .token.constant,
+.code-block .token.symbol,
+.code-block .token.deleted {
+    color: #f08d49;
+}
+
+.code-block .token.selector,
+.code-block .token.attr-name,
+.code-block .token.string,
+.code-block .token.char,
+.code-block .token.builtin,
+.code-block .token.inserted {
+    color: #7ec699;
+}
+
+.code-block .token.operator,
+.code-block .token.entity,
+.code-block .token.url,
+.code-block .language-css .token.string,
+.code-block .style .token.string {
+    color: #67cdcc;
+}
+
+.code-block .token.atrule,
+.code-block .token.attr-value,
+.code-block .token.keyword {
+    color: #cc99cd;
+}
+
+.code-block .token.function,
+.code-block .token.class-name {
+    color: #f8c555;
+}
+
+.code-block .token.regex,
+.code-block .token.important,
+.code-block .token.variable {
+    color: #de935f;
 }
 
 .info-box,
@@ -871,11 +977,70 @@ body {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
+    border-radius: 0.5rem;
 }
 
 @keyframes loading {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
+}
+
+/* Skeleton Loaders */
+.skeleton-content {
+    padding: 3rem;
+}
+
+.skeleton-header {
+    margin-bottom: 2rem;
+}
+
+.skeleton-title {
+    height: 3rem;
+    width: 60%;
+    margin-bottom: 1rem;
+}
+
+.skeleton-subtitle {
+    height: 1.5rem;
+    width: 80%;
+    margin-bottom: 1rem;
+}
+
+.skeleton-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.skeleton-meta-item {
+    height: 1rem;
+    width: 100px;
+}
+
+.skeleton-section {
+    margin-bottom: 2rem;
+}
+
+.skeleton-section-title {
+    height: 2rem;
+    width: 40%;
+    margin-bottom: 1rem;
+}
+
+.skeleton-paragraph {
+    height: 1rem;
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+.skeleton-paragraph:last-child {
+    width: 85%;
+}
+
+.skeleton-code {
+    height: 200px;
+    width: 100%;
+    margin: 1.5rem 0;
 }
 
 /* Utility Classes */
